@@ -21,6 +21,19 @@
         <version>2.2.5.RELEASE</version>
     </parent>
 
+    <repositories>
+        <repository>
+            <id>maven-central2</id>
+            <name>Maven Central 2</name>
+            <url>https://repo1.maven.org/maven2/</url>
+        </repository>
+        <repository>
+            <id>spring-plugins</id>
+            <name>Spring Plugins</name>
+            <url>https://repo.spring.io/plugins-release/</url>
+        </repository>
+    </repositories>
+
     <build>
         <pluginManagement>
             <plugins>
