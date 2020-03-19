@@ -1,0 +1,205 @@
+swagger: '2.0'
+info:
+  description: Java-Swagger-Rest Demo
+  version: 2.0.0
+  title: Java-Swagger-Rest Demo
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: alex.simonetti@dtidigital.com.br
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+host: api.alxdroiddev.com:8080
+
+basePath: /api/face-svc/v1/
+
+schemes:
+  - http
+
+paths:
+
+
+
+  conteudo/upload:
+    post:
+      operationId: uploadFiles
+      summary: Salva o video e imagem enviados no S3, gera um ID de operação e os associa ao userName e userId, e retorna o operationId
+      consumes:
+        - multipart/form-data
+      parameters:
+        - in: formData
+          name: userName
+          type: string
+          required: true
+          description: nome do usuário
+        - in: formData
+          name: userId
+          type: string
+          required: true
+          description: ID único do usuário
+        - in: formData
+          name: generatedText
+          type: string
+          required: true
+          description: Texto gerado pelo backend que é esperado que o usuário leia
+        - in: formData
+          name: imageFile
+          type: file
+          required: true
+        - in: formData
+          name: videoFile
+          type: file
+          required: true
+      responses:
+        200:
+          description: Operação bem sucedida, retorna um inteiro
+          schema:
+            $ref: '#/definitions/ResponseUpload'
+
+  operacao:
+    get:
+      operationId: getOperacao
+      summary: Retorna o status de uma operação previamente submetida para análise
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          type: string
+          description: identificador da operação
+          required: true
+          name: operationId
+          example: '28f8803322114af0b15ad204740a6122'
+      responses:
+        200:
+          description: Retorna etorna json com status da operacao, e resultado, se houver
+          schema:
+            $ref: '#/definitions/ResponseOperacao'
+
+  texto:
+    get:
+      operationId: getTexto
+      summary: Obtem o texto a ser falado pelo usuário no vídeo
+      parameters:
+        - in: query
+          description: user name
+          required: true
+          name: userName
+          type: string
+      responses:
+        200:
+          description: Texto a ser falado
+          schema:
+            $ref: '#/definitions/ResponseTexto'
+
+definitions:
+
+  ResponseOperacao:
+    type: object
+    required:
+      - operationId
+      - operationStatus
+      - transcribeJobFinished
+      - rekognitionJobFinished
+    properties:
+      operationId:
+        type: string
+        description: identificador da operação
+        example: '28f88033-2211-4af0-b15a-d204740a6122'
+      operationStatus:
+        type: string
+        description: statis da operacao
+        example: "Na fila"
+      dateCreated:
+        type: string
+        description: data da criacao
+        example: '2019-04-25T20:04:01.12'
+      textCreated:
+        type: string
+        description: texto gerado pelo backend para o usuário
+      videoFileS3Url:
+        type: string
+        description: URL do video no S3
+        format:
+        example:
+      imageFileS3Url:
+        type: string
+        description: URL da imagem no S3
+        format:
+        example:
+      imageFacesFound:
+        type: integer
+        description: quantidade de faces encontradas na foto
+        example: 1
+      rekognitionFacesFound:
+        type: integer
+        description: quantidade encontradas no video, apos passagem pelo Rekognition
+        example: 1
+      rekognitionBestFaceId:
+        type: string
+        description: id da pessoa no video com melhor índice de similaridade com a melhor pessoa da foto
+        example: 1
+      rekognitionBestFaceSimilarity:
+        type: number
+        format: double
+        description: melhor percentual de similaridade da pessoa da foto no video
+        example: 1
+      transcribeTextFound:
+        type: string
+        description: texto extraido do video
+      transcribeTextSimilarity:
+        type: number
+        format: double
+        description: indice de similaridade do texto extraído com o texto gerado
+        example: 0.8943321
+      transcribeJobDuration:
+        type: number
+        format: double
+        description: tempo de duração da chamada ao Trascribe, em segundos
+        example: 189.15554778
+      rekognitionJobDuration:
+        type: number
+        format: double
+        description: tempo de duração da chamada ao Rekognition, em segundos
+        example: 341.67999178
+      transcribeJobFinished:
+        type: boolean
+        description: se o job de transcrição do Transcribe já finalizou, passando pelo Lambda
+        example: false
+      rekognitionJobFinished:
+        type: boolean
+        description: se o job de análise do Rekognition já finalizou, passando pelo Lambda
+        example: false
+      parameJeferson:
+        type: string
+        description: se o job de análise do Rekognition já finalizou, passando pelo Lambda
+        example: "Eu sou o Jeferson"
+
+  ResponseOperacaoPost:
+    type: object
+    required:
+      - operationId
+    properties:
+      operationId:
+        type: string
+        description: identificador da operação
+        example: '28f88033-2211-4af0-b15a-d204740a6122'
+
+  ResponseUpload:
+    type: string
+    description: ID da operação
+    example: '487955474acb12cdeefa71afbbda555a5'
+
+  ResponseTexto:
+    type: object
+    required:
+      - texto
+      - tempo
+    properties:
+      texto:
+        type: string
+        example: 'Eu quero comprar um carro usado em Belo Horizonte'
+      tempo:
+        type: integer
+        description: duração máxima, em segundos, que o vídeo poderá ter
+        example: 15

@@ -1,0 +1,14 @@
+AndroidManifest.xml
+/.gitignore
+/.travis.yml
+/build.gradle
+/build.sbt
+/git_push.sh
+/gradle.properties
+/gradlew
+docs/**
+gradle/**
+src/test/**
+**Test.java
+
+
