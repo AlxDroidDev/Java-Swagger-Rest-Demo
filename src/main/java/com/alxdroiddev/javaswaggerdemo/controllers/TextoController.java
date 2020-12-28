@@ -16,8 +16,7 @@ public class TextoController implements TextoApi {
     private TextoService textoService;
 
     @Override
-    public ResponseEntity<ResponseTexto> getTexto(@NotNull @Valid String userName) {
+    public ResponseEntity<ResponseTexto> getTexto(@NotNull @Valid String userName, @NotNull @Valid String userIdCode) {
         return ResponseEntity.ok(textoService.getTexto(userName));
     }
-
 }

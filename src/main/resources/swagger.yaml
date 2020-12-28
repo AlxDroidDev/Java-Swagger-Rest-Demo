@@ -18,9 +18,6 @@ schemes:
   - http
 
 paths:
-
-
-
   conteudo/upload:
     post:
       operationId: uploadFiles
@@ -72,7 +69,7 @@ paths:
           example: '28f8803322114af0b15ad204740a6122'
       responses:
         200:
-          description: Retorna etorna json com status da operacao, e resultado, se houver
+          description: Retorna json com status da operacao, e resultado, se houver
           schema:
             $ref: '#/definitions/ResponseOperacao'
 
@@ -85,6 +82,11 @@ paths:
           description: user name
           required: true
           name: userName
+          type: string
+        - in: query
+          description: user name
+          required: true
+          name: userIdCode
           type: string
       responses:
         200:
